@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.dy = 0
 
         #Gravitational acceleration
-        self.g = -2
+        self.g = -1
 
         #Walking speed
         self.walkSpeed = 10
