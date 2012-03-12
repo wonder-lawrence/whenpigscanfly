@@ -54,4 +54,7 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self):
         #Dummy draw method
-        pygame.draw.circle(self.screen, (0, 0, 0), (self.x, self.y), 5)
+        if self.gravity:
+            pygame.draw.circle(self.screen, (0, 0, 255), (self.x, self.y), 5)
+        else:
+            pygame.draw.circle(self.screen, (255, 0, 0), (self.x, self.y), 5)
