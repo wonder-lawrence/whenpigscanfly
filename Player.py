@@ -47,7 +47,14 @@ class Player(pygame.sprite.Sprite):
         
         self.x += self.dx
         self.y += self.dy
-        
+       
+        #Inelastic collisions
+        if gravity:
+            if self.x != bound(0, self.x, self.maxx):
+                self.dx //= -2
+            if self.y != bound(0, self.y, self.maxy):
+                self.dy //= -2
+
         #Don't go off edge of screen
         self.x = bound(0, self.x, self.maxx)
         self.y = bound(0, self.y, self.maxy)
