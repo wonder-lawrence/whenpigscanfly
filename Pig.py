@@ -9,15 +9,16 @@ class Pig(pygame.sprite.Sprite):
         self.screen = screen
         self.x = x
         self.y = y
-        
+       
+        #Flying and walking speed
+        self.flyingSpeed = 6
+        self.walkingSpeed = 10
+
+        #Assume no gravity and set velocity accordingly
+        #May need to pass in gravity eventually
+        self.gravity = False
         self.dx = 0
-        self.dy = 0
-
-        #Gravitational acceleration
-        self.g = -1
-
-        #flying speed
-        self.flyingSpeed = 8
+        self.dy = self.walkingSpeed
 
         #Boundaries
         self.maxx = self.screen.get_width()
@@ -25,37 +26,30 @@ class Pig(pygame.sprite.Sprite):
         #minimums assumed to be zero
 
     def update(self, gravity):
-        self.gravity = gravity
-        
-        if gravity:
-            #todo: collision detection for standing on platforms
-            #currently always in freefall
-            self.dy -= self.g
-        else:
-            self.dx = 0
-            self.dy = 0
-            #randomize speed of the pig.
+        if gravity != self.gravity:
+            self.gravity = gravity
+            if gravity: #new gravity
+                self.dx = self.flyingSpeed
+                self.dy = 0
+            else: #newly no gravity
+                self.dx = 0
+                self.dy = self.walkingSpeed
 
-            self.dy += random.randint(-5,5)
-            self.dx += random.randint(-5,5)
-        
+        #Update position
         self.x += self.dx
         self.y += self.dy
-       
-        #Inelastic collisions
-        if not gravity:
-            if self.x != bound(0, self.x, self.maxx):
-                self.dx //= -2
-            if self.y != bound(0, self.y, self.maxy):
-                self.dy //= -2
 
-        #Don't go off edge of screen
-        self.x = bound(0, self.x, self.maxx)
-        self.y = bound(0, self.y, self.maxy)
+        #Don't go off edge of screen, change direction instead
+        bounded = bound(0, self.x, self.maxx)
+        if self.x != bounded:
+            self.dx *= -1
+            self.x = bounded
 
+        bounded = bound(0, self.y, self.maxy)
+        if self.y != bounded:
+            self.dy *= -1
+            self.y = bounded
+        
     def draw(self):
         #Dummy draw method
-        if self.gravity:
-            pygame.draw.circle(self.screen, (0, 0, 255), (self.x, self.y), 5)
-        else:
-            pygame.draw.circle(self.screen, (255, 0, 0), (self.x, self.y), 5)
+        pygame.draw.circle(self.screen, (255, 192, 203), (self.x, self.y), 5)

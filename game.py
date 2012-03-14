@@ -28,12 +28,13 @@ gravity = False
 #The player (a sprite)
 player = Player(screen, 400, 300)
 
-pig = Pig(screen, 100,200)
+pigs = [Pig(screen, 100, 200), Pig(screen, 500, 400)] 
 
 #game loop
 while True:
     time_passed = clock.tick(FPS)
 
+    #Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             quit()
@@ -48,10 +49,19 @@ while True:
             if event.key in commands:
                 commands.remove(event.key)
 
+    #Background
     screen.fill((255, 255, 255))
 
+    #Non-moving sprites go here
+
+    #Update
     player.update(commands, gravity)
-    pig.update(gravity)
+    for pig in pigs:
+        pig.update(gravity)
+
+    #Draw
     player.draw()
-    pig.draw()
+    for pig in pigs:
+        pig.draw()
+
     pygame.display.flip() 
