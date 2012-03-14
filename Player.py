@@ -5,8 +5,18 @@ def bound (lo, val, hi):
     return max(lo, min(val, hi))
 
 class Player(pygame.sprite.Sprite):
+
+    def load_image(self, image_name):
+        try:
+        	image = pygame.image.load(image_name)
+        except pygame.error, message:
+            print "Cannot load image: " + image_name
+            raise SystemExit, message
+        return image.convert_alpha()
+
     def __init__ (self, screen, x, y):
         self.screen = screen
+        self.image = self.load_image("TimL.png")
         self.x = x
         self.y = y
         
@@ -59,14 +69,11 @@ class Player(pygame.sprite.Sprite):
         self.x = bound(0, self.x, self.maxx)
         self.y = bound(0, self.y, self.maxy)
 
-        self.rect = pygame.Rect(self.x, self.y, 10, 10)
+        self.rect = pygame.Rect(self.x, self.y, 58, 100)
 
     def kill(self):
         pass
 
     def draw(self):
-        #Dummy draw method
-        if self.gravity:
-            pygame.draw.circle(self.screen, (0, 0, 255), (self.x, self.y), 5)
-        else:
-            pygame.draw.circle(self.screen, (255, 0, 0), (self.x, self.y), 5)
+        self.screen.blit(self.image, (self.x, self.y))
+
