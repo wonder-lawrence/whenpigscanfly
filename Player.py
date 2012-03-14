@@ -48,8 +48,10 @@ class Player(pygame.sprite.Sprite):
             #with holding down both left and right keys
             if K_RIGHT in commands:
                 self.dx += self.walkSpeed
+                self.image= self.load_image("TimR.png")
             if K_LEFT in commands:
                 self.dx -= self.walkSpeed
+                self.image= self.load_image("TimL.png")
             if K_UP in commands:
                 self.dy -= self.walkSpeed
             if K_DOWN in commands:
