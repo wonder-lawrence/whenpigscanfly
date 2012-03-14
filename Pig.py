@@ -1,15 +1,17 @@
 import pygame, sys, os, random
 from pygame.locals import *
 
-def bound (lo, val, hi):
-    return max(lo, min(val, hi))
-
 class Pig(pygame.sprite.Sprite):
     def __init__ (self, screen, x, y):
         self.screen = screen
         self.x = x
         self.y = y
-       
+
+        #Width and height (curently of ellipse, later of sprite image)
+        self.image_w = 40
+        self.image_h = 100
+
+
         #Flying and walking speed
         self.flyingSpeed = 6
         self.walkingSpeed = 10
@@ -28,6 +30,7 @@ class Pig(pygame.sprite.Sprite):
     def update(self, gravity):
         if gravity != self.gravity:
             self.gravity = gravity
+            (self.image_w, self.image_h) = (self.image_h, self.image_w)
             if gravity: #new gravity
                 self.dx = self.flyingSpeed
                 self.dy = 0
@@ -40,16 +43,13 @@ class Pig(pygame.sprite.Sprite):
         self.y += self.dy
 
         #Don't go off edge of screen, change direction instead
-        bounded = bound(0, self.x, self.maxx)
-        if self.x != bounded:
+        if self.x < 0 or self.x + self.image_w > self.maxx:
             self.dx *= -1
-            self.x = bounded
 
-        bounded = bound(0, self.y, self.maxy)
-        if self.y != bounded:
+        if self.y < 0 or self.y + self.image_h > self.maxy:
             self.dy *= -1
-            self.y = bounded
-        
+
     def draw(self):
         #Dummy draw method
-        pygame.draw.circle(self.screen, (255, 192, 203), (self.x, self.y), 5)
+        boundBox = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
+        pygame.draw.ellipse(self.screen, (255, 192, 203), boundBox)
