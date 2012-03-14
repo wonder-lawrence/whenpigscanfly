@@ -59,6 +59,14 @@ while True:
     for pig in pigs:
         pig.update(gravity)
 
+    #Check pig-player collisions
+    for pig in pigs:
+        if pygame.sprite.collide_rect(player, pig):
+            if gravity:
+                pig.kill()
+            else:
+                player.kill()
+
     #Draw
     player.draw()
     for pig in pigs:

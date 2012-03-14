@@ -59,6 +59,11 @@ class Player(pygame.sprite.Sprite):
         self.x = bound(0, self.x, self.maxx)
         self.y = bound(0, self.y, self.maxy)
 
+        self.rect = pygame.Rect(self.x, self.y, 10, 10)
+
+    def kill(self):
+        pass
+
     def draw(self):
         #Dummy draw method
         if self.gravity:

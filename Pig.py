@@ -11,6 +11,7 @@ class Pig(pygame.sprite.Sprite):
         self.image_w = 40
         self.image_h = 100
 
+        self.active = True
 
         #Flying and walking speed
         self.flyingSpeed = 6
@@ -49,7 +50,13 @@ class Pig(pygame.sprite.Sprite):
         if self.y < 0 or self.y + self.image_h > self.maxy:
             self.dy *= -1
 
+        self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
+
+    def kill(self):
+        self.active = False
+
     def draw(self):
         #Dummy draw method
-        boundBox = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
-        pygame.draw.ellipse(self.screen, (255, 192, 203), boundBox)
+        if self.active:
+            boundBox = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
+            pygame.draw.ellipse(self.screen, (255, 192, 203), boundBox)
