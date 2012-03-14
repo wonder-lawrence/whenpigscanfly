@@ -69,6 +69,9 @@ while True:
                 pig.kill()
             else:
                 player.kill()
+   
+    #Remove inactive pigs
+    pigs = filter(lambda pig: pig.active, pigs)
 
     #Draw
     player.draw()
