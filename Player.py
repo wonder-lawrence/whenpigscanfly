@@ -23,6 +23,9 @@ class Player(pygame.sprite.Sprite):
         self.dx = 0
         self.dy = 0
 
+        self.image_h = 50
+        self.image_w = 29
+
         #Gravitational acceleration
         self.g = -1
 
@@ -30,8 +33,8 @@ class Player(pygame.sprite.Sprite):
         self.walkSpeed = 10
 
         #Boundaries
-        self.maxx = self.screen.get_width()
-        self.maxy = self.screen.get_height()
+        self.maxx = self.screen.get_width() - self.image_w
+        self.maxy = self.screen.get_height() - self.image_h
         #minimums assumed to be zero
 
     def update(self, commands, gravity):
@@ -71,7 +74,7 @@ class Player(pygame.sprite.Sprite):
         self.x = bound(0, self.x, self.maxx)
         self.y = bound(0, self.y, self.maxy)
 
-        self.rect = pygame.Rect(self.x, self.y, 29, 50)
+        self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
 
     def kill(self):
         pass
