@@ -50,7 +50,10 @@ while True:
                 commands.remove(event.key)
 
     #Background
-    screen.fill((255, 255, 255))
+    if gravity:
+        screen.fill((223, 223, 255))
+    else:
+        screen.fill((223, 255, 223))
 
     #Non-moving sprites go here
 
