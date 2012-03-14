@@ -1,6 +1,7 @@
 import pygame, sys, os
 from pygame.locals import *
 from Player import Player
+from Pig import Pig
 
 def quit():
     pygame.quit()
@@ -27,6 +28,8 @@ gravity = False
 #The player (a sprite)
 player = Player(screen, 400, 300)
 
+pig = Pig(screen, 100,200)
+
 #game loop
 while True:
     time_passed = clock.tick(FPS)
@@ -48,6 +51,7 @@ while True:
     screen.fill((255, 255, 255))
 
     player.update(commands, gravity)
+    pig.update(gravity)
     player.draw()
-
+    pig.draw()
     pygame.display.flip() 
