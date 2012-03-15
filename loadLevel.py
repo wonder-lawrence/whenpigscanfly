@@ -5,6 +5,18 @@ from Player import Player
 from Pig import Pig
 
 def loadLevel(level_name, screen):
+    """
+    loadLevel - expects the name of a spriteMap and the screen, and returns the
+    sprites for the level.
+    
+    The sprite map should consist of spaces, newlines, P's, and exactly one T.
+    Max line length is 40; max number of lines is 30.
+    For best results, align blocks and keep pigs away from edges.
+    
+    Return type: a tuple of one Player object, a possibly empty list of Pig
+    objects, and a possibly empty list of Block objects.
+    """
+
     pigs = []
     blocks = []
 
