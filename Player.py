@@ -37,7 +37,13 @@ class Player(pygame.sprite.Sprite):
         self.maxy = self.screen.get_height() - self.image_h
         #minimums assumed to be zero
 
+        #Currently unused
         self.active = True
+        
+        #Load both images now
+        self.image_r = self.load_image("TimR.png")
+        self.image_l = self.load_image("TimL.png")
+        self.image = self.image_r
 
     def update(self, commands, gravity):
         self.gravity = gravity
@@ -53,10 +59,10 @@ class Player(pygame.sprite.Sprite):
             #with holding down both left and right keys
             if K_RIGHT in commands:
                 self.dx += self.walkSpeed
-                self.image= self.load_image("TimR.png")
+                self.image = self.image_r
             if K_LEFT in commands:
                 self.dx -= self.walkSpeed
-                self.image= self.load_image("TimL.png")
+                self.image = self.image_l
             if K_UP in commands:
                 self.dy -= self.walkSpeed
             if K_DOWN in commands:
