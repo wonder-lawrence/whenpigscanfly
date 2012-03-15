@@ -2,4 +2,6 @@
 compile
 Player.pyc
 Pig.pyc
+Block.pyc
+loadLevel.pyc
 game.pyc

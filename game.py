@@ -1,7 +1,6 @@
 import pygame, sys, os
 from pygame.locals import *
-from Player import Player
-from Pig import Pig
+from loadLevel import loadLevel
 
 def quit():
     pygame.quit()
@@ -25,11 +24,8 @@ commands = []
 #Gravity boolean. True is Mario, False is Pokemon
 gravity = False
 
-#The player (a sprite)
-player = Player(screen, 400, 300)
-
-pigs = [Pig(screen, 100, 200), Pig(screen, 500, 400)] 
-
+#Read in a file to generate the sprites on a level
+player, pigs, blocks = loadLevel("one.txt", screen)
 #game loop
 while True:
     time_passed = clock.tick(FPS)
@@ -55,7 +51,9 @@ while True:
     else:
         screen.fill((223, 255, 223))
 
-    #Non-moving sprites go here
+    #Non-moving sprites (aka "blocks")
+    for block in blocks:
+        block.draw()
 
     #Update
     player.update(commands, gravity)
