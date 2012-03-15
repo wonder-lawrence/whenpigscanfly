@@ -37,6 +37,8 @@ class Player(pygame.sprite.Sprite):
         self.maxy = self.screen.get_height() - self.image_h
         #minimums assumed to be zero
 
+        self.active = True
+
     def update(self, commands, gravity):
         self.gravity = gravity
         
