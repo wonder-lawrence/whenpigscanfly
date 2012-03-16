@@ -45,16 +45,6 @@ while True:
             if event.key in commands:
                 commands.remove(event.key)
 
-    #Background
-    if gravity:
-        screen.fill((223, 223, 255))
-    else:
-        screen.fill((223, 255, 223))
-
-    #Non-moving sprites (aka "blocks")
-    for block in blocks:
-        block.draw()
-
     #Update
     player.update(commands, gravity)
     for pig in pigs:
@@ -70,8 +60,19 @@ while True:
    
     #Remove inactive pigs
     pigs = filter(lambda pig: pig.active, pigs)
-
+    
     #Draw
+    #Background
+    if gravity:
+        screen.fill((223, 223, 255))
+    else:
+        screen.fill((223, 255, 223))
+
+    #Non-moving sprites (aka "blocks")
+    for block in blocks:
+        block.draw()
+
+    #Moving sprites
     player.draw()
     for pig in pigs:
         pig.draw()
