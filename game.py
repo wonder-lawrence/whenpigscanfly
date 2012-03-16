@@ -17,7 +17,7 @@ FPS = 50
 time_passed = 0
 
 #static list of controls
-controls = [K_UP, K_DOWN, K_LEFT, K_RIGHT]
+controls = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_w, K_a, K_s, K_d]
 #dynamic list of active commands. Subset of controls.
 commands = []
 

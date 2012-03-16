@@ -57,15 +57,15 @@ class Player(pygame.sprite.Sprite):
             self.dy = 0
             #Zero out velocities, then add or subtract = simplest way to deal
             #with holding down both left and right keys
-            if K_RIGHT in commands:
+            if K_RIGHT in commands or K_d in commands:
                 self.dx += self.walkSpeed
                 self.image = self.image_r
-            if K_LEFT in commands:
+            if K_LEFT in commands or K_a in commands:
                 self.dx -= self.walkSpeed
                 self.image = self.image_l
-            if K_UP in commands:
+            if K_UP in commands or K_w in commands:
                 self.dy -= self.walkSpeed
-            if K_DOWN in commands:
+            if K_DOWN in commands or K_s in commands:
                 self.dy += self.walkSpeed
         
         self.x += self.dx
