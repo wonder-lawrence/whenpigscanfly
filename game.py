@@ -60,6 +60,8 @@ while True:
                 commands.remove(event.key)
         elif event.type == MOUSEMOTION:
             flamethrower.rotateTo((player.x-offset, player.y), event.pos)
+        elif event.type == MOUSEBUTTONDOWN:
+            flames.append(Flame(level, flamethrower.theta, flamethrower.x, flamethrower.y))
 
     #Update
     player.update(commands)
