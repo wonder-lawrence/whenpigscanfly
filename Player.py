@@ -29,10 +29,14 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.smoothscale(self.image, (self.image_w, self.image_h))
 
         #Gravitational acceleration
-        self.g = -1
+        self.g = 1
 
-        #Walking speed
+        #Speeds
+        self.jumpSpeed = -20
         self.walkSpeed = 10
+
+        #Prevent double jumps from holding key down for more than one frame
+        self.jumped = False
 
         #Boundaries
         self.maxx = self.screen.get_width() - self.image_w
@@ -44,34 +48,31 @@ class Player(pygame.sprite.Sprite):
         
     def update(self, commands):
         
-        if False:
-            #todo: collision detection for standing on platforms
-            #currently always in freefall
-            self.dy -= self.g
-        else:
-            self.dx = 0
+        #todo: collision detection for standing on platforms
+        #currently always in freefall
+        self.dx = 0
+        if self.y == self.maxy: #Todo: stop falling on blocks, not just botton of screen
             self.dy = 0
-            #Zero out velocities, then add or subtract = simplest way to deal
-            #with holding down both left and right keys
-            if K_RIGHT in commands or K_d in commands:
-                self.dx += self.walkSpeed
-            if K_LEFT in commands or K_a in commands:
-                self.dx -= self.walkSpeed
-            if K_UP in commands or K_w in commands:
-                self.dy -= self.walkSpeed
-            if K_DOWN in commands or K_s in commands:
-                self.dy += self.walkSpeed
+            self.jumped = False
+        else:
+            self.dy += self.g
+
+        if K_RIGHT in commands or K_d in commands:
+            self.dx += self.walkSpeed
+        if K_LEFT in commands or K_a in commands:
+            self.dx -= self.walkSpeed
+        if K_UP in commands or K_w in commands:
+            if not self.jumped:
+                self.dy += self.jumpSpeed
+                self.jumped = True
+               
+        #Unused 
+        if K_DOWN in commands or K_s in commands:
+            pass
 
         self.x += self.dx
         self.y += self.dy
        
-        #Inelastic collisions
-        if False:
-            if self.x != bound(0, self.x, self.maxx):
-                self.dx //= -2
-            if self.y != bound(0, self.y, self.maxy):
-                self.dy //= -2
-
         #Don't go off edge of screen
         self.x = bound(0, self.x, self.maxx)
         self.y = bound(0, self.y, self.maxy)
