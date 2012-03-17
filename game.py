@@ -2,6 +2,7 @@ import pygame, sys, os
 from pygame.locals import *
 from loadLevel import loadLevel
 from Flamethrower import Flamethrower
+from Flame import Flame
 
 def quit():
     pygame.quit()
@@ -20,8 +21,6 @@ level = pygame.Surface((LEVEL_WIDTH, HEIGHT))
 #Offset between model (level) and view (screen) 
 offset = 0
 
-font = pygame.font.Font(None, 48)
-
 #Clock
 clock = pygame.time.Clock()
 FPS = 50
@@ -32,13 +31,12 @@ controls = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_w, K_a, K_s, K_d]
 #Dynamic list of active commands. Subset of controls.
 commands = []
 
-#Gravity boolean. True is Mario, False is Pokemon
-gravity = False
-
 #Read in a file to generate the sprites on a level
 player, pigs, blocks = loadLevel("one.txt", level)
 flamethrower = Flamethrower(level, player.x, player.y)
+flames = []
 
+font = pygame.font.Font(None, 48)
 #Debugging string - set this and it appears onscreen!
 db_str = ""
 
@@ -56,7 +54,7 @@ while True:
             elif event.key in controls:
                 commands.append(event.key)
             elif event.key == K_SPACE:
-                gravity = not gravity
+                flames.append(Flame(level, flamethrower.theta, flamethrower.x, flamethrower.y))
         elif event.type == KEYUP:
             if event.key in commands:
                 commands.remove(event.key)
@@ -64,28 +62,31 @@ while True:
             flamethrower.rotateTo((player.x-offset, player.y), event.pos)
 
     #Update
-    player.update(commands, gravity)
+    player.update(commands)
     flamethrower.update(player.x, player.y)
+    for flame in flames:
+        flame.update()
     for pig in pigs:
-        pig.update(gravity)
+        pig.update()
 
-    #Check pig-player collisions
+    #Check pig collisions
     for pig in pigs:
         if pygame.sprite.collide_rect(player, pig):
-            if gravity:
-                pig.kill()
-            else:
-                player.kill()
-   
-    #Remove inactive pigs
-    pigs = filter(lambda pig: pig.active, pigs)
+            player.kill()
+            for flame in flames:
+                if pygame.sprite.collide_rect(flame, pig):
+                    pig.kill()
+                    flame.kill()
+                    db_str = str(pygame.time.get_ticks())
+
+    #Remove inactive sprites
+    pigs   = filter(lambda pig: pig.active, pigs)
+    flames = filter(lambda flm: flm.active, flames)
     
     #Draw
     #Background
-    if gravity:
-        level.fill((223, 223, 255))
-    else:
-        level.fill((223, 255, 223))
+    level.fill((200, 200, 200))
+    pygame.draw.line(level, (0,0,255), (0,0), (LEVEL_WIDTH, HEIGHT))
 
     #Non-moving sprites (aka "blocks")
     for block in blocks:
@@ -94,6 +95,8 @@ while True:
     #Moving sprites
     player.draw()
     flamethrower.draw()
+    for flame in flames:
+        flame.draw()
     for pig in pigs:
         pig.draw()
 

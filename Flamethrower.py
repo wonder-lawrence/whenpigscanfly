@@ -35,9 +35,10 @@ class Flamethrower(pygame.sprite.Sprite):
         
     def rotateTo(self, (player_x, player_y), (mouse_x, mouse_y)):
         if player_y != mouse_y: #Avoid zero divide
-            self.theta = degrees(atan2((player_x - mouse_x),(player_y - mouse_y)))  
-            self.theta += 105 #Magic constant
-            if self.thetaMin < self.theta < self.thetaMax:
+            theta = degrees(atan2((player_x - mouse_x),(player_y - mouse_y)))  
+            theta += 105 #Magic constant
+            if self.thetaMin < theta < self.thetaMax:
+                self.theta = theta
                 self.image = pygame.transform.rotate(self.base_image, self.theta)
      
     def update(self, player_x, player_y):

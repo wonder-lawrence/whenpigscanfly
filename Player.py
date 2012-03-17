@@ -42,10 +42,9 @@ class Player(pygame.sprite.Sprite):
         #Currently unused
         self.active = True
         
-    def update(self, commands, gravity):
-        self.gravity = gravity
+    def update(self, commands):
         
-        if gravity:
+        if False:
             #todo: collision detection for standing on platforms
             #currently always in freefall
             self.dy -= self.g
@@ -67,7 +66,7 @@ class Player(pygame.sprite.Sprite):
         self.y += self.dy
        
         #Inelastic collisions
-        if gravity:
+        if False:
             if self.x != bound(0, self.x, self.maxx):
                 self.dx //= -2
             if self.y != bound(0, self.y, self.maxy):
