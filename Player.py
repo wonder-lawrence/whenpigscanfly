@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from Flamethrower import Flamethrower
 
 def bound (lo, val, hi):
     return max(lo, min(val, hi))
@@ -43,6 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.maxy = self.screen.get_height() - self.image_h
         #minimums assumed to be zero
 
+        self.flamethrower = Flamethrower(self.screen, self.x, self.y)
+
         #Currently unused
         self.active = True
         
@@ -79,9 +82,17 @@ class Player(pygame.sprite.Sprite):
 
         self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
 
+        self.flamethrower.update(self.x, self.y)
+
     def kill(self):
         pass
 
+    def shoot(self):
+        return self.flamethrower.shoot()
+
+    def rotateFlamethrower(self, mouse_pos):
+        self.flamethrower.rotateTo((self.x, self.y), mouse_pos)
+
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
-
+        self.flamethrower.draw()
