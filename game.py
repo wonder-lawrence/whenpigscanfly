@@ -2,7 +2,6 @@ import pygame, sys, os
 from pygame.locals import *
 from loadLevel import loadLevel
 from Flamethrower import Flamethrower
-from Flame import Flame
 
 def quit():
     pygame.quit()
@@ -36,9 +35,10 @@ player, pigs, blocks = loadLevel("one.txt", level)
 flamethrower = Flamethrower(level, player.x, player.y)
 flames = []
 
+#Score and score display
 font = pygame.font.Font(None, 48)
-#Debugging string - set this and it appears onscreen!
-db_str = ""
+score_str = ""
+score = 0
 
 #game loop
 while True:
@@ -54,14 +54,14 @@ while True:
             elif event.key in controls:
                 commands.append(event.key)
             elif event.key == K_SPACE:
-                flames.append(Flame(level, flamethrower.theta, flamethrower.x, flamethrower.y))
+                flames.append(flamethrower.shoot())
         elif event.type == KEYUP:
             if event.key in commands:
                 commands.remove(event.key)
         elif event.type == MOUSEMOTION:
             flamethrower.rotateTo((player.x-offset, player.y), event.pos)
         elif event.type == MOUSEBUTTONDOWN:
-            flames.append(Flame(level, flamethrower.theta, flamethrower.x, flamethrower.y))
+            flames.append(flamethrower.shoot())
 
     #Update
     player.update(commands)
@@ -79,11 +79,14 @@ while True:
             if pygame.sprite.collide_rect(flame, pig):
                 pig.kill()
                 flame.kill()
+                score += 1
 
     #Remove inactive sprites
     pigs   = filter(lambda pig: pig.active, pigs)
     flames = filter(lambda flm: flm.active, flames)
-    
+   
+    score_str = str(score)
+
     #Draw
     #Background
     level.fill((200, 200, 200))
@@ -108,5 +111,5 @@ while True:
         offset += 10
 
     screen.blit(level, (-offset, 0))
-    screen.blit(font.render(db_str, 1, (0, 0, 0)), (10,10))
+    screen.blit(font.render(score_str, 1, (0, 0, 0)), (10,10))
     pygame.display.flip() 

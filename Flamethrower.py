@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from math import atan2, radians, degrees, cos, sin
+from Flame import Flame
 
 def bound (lo, val, hi):
     return max(lo, min(val, hi))
@@ -29,7 +30,6 @@ class Flamethrower(pygame.sprite.Sprite):
         self.base_image = pygame.transform.smoothscale(self.base_image, self.image_dims)
         self.image = self.base_image
         
-        
         #Currently unused
         self.active = True
         
@@ -50,7 +50,9 @@ class Flamethrower(pygame.sprite.Sprite):
                 self.y -= sin(radians(self.theta))*self.image_dims[0]
             else:
                 self.x += sin(radians(self.theta))*self.image_dims[1]
-
+    
+    def shoot(self):
+        return Flame(self.screen, self.theta, self.x, self.y)
 
     def kill(self):
         pass
