@@ -44,6 +44,4 @@ class Pig(pygame.sprite.Sprite):
     def draw(self):
         #Dummy draw method
         if self.active:
-            boundBox = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
-            pygame.draw.ellipse(self.screen, (255, 192, 203), boundBox)
-            pygame.draw.rect(self.screen, (255, 0, 0), boundBox, 1)
+            pygame.draw.ellipse(self.screen, (255, 192, 203), self.rect)

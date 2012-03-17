@@ -8,7 +8,7 @@ class Flame(pygame.sprite.Sprite):
         try:
         	image = pygame.image.load("fire1.png")
         except pygame.error, message:
-            print "Cannot load image: " + image_name
+            print "Cannot load image: fire1.png"
             raise SystemExit, message
         return image.convert_alpha()
 
@@ -22,7 +22,7 @@ class Flame(pygame.sprite.Sprite):
         
         self.x = x 
         self. y = y
-        self.speed = 5
+        self.speed = 10
 
         self.rect = pygame.Rect((self.x, self.y), self.image_dims)
 
@@ -39,4 +39,3 @@ class Flame(pygame.sprite.Sprite):
 
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
-        pygame.draw.rect(self.screen, (255, 0, 0), self.rect, 1)

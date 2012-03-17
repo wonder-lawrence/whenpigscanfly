@@ -73,11 +73,10 @@ while True:
     for pig in pigs:
         if pygame.sprite.collide_rect(player, pig):
             player.kill()
-            for flame in flames:
-                if pygame.sprite.collide_rect(flame, pig):
-                    pig.kill()
-                    flame.kill()
-                    db_str = str(pygame.time.get_ticks())
+        for flame in flames:
+            if pygame.sprite.collide_rect(flame, pig):
+                pig.kill()
+                flame.kill()
 
     #Remove inactive sprites
     pigs   = filter(lambda pig: pig.active, pigs)
