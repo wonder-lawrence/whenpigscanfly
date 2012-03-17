@@ -16,15 +16,17 @@ class Player(pygame.sprite.Sprite):
 
     def __init__ (self, screen, x, y):
         self.screen = screen
-        self.image = self.load_image("TimL.png")
+        self.image = self.load_image("pyro.png")
         self.x = x
         self.y = y
-        
+        self.theta = -30
+
         self.dx = 0
         self.dy = 0
 
-        self.image_h = 50
-        self.image_w = 29
+        self.image_w = 50
+        self.image_h = 93
+        self.image = pygame.transform.smoothscale(self.image, (self.image_w, self.image_h))
 
         #Gravitational acceleration
         self.g = -1
@@ -40,11 +42,6 @@ class Player(pygame.sprite.Sprite):
         #Currently unused
         self.active = True
         
-        #Load both images now
-        self.image_r = self.load_image("TimR.png")
-        self.image_l = self.load_image("TimL.png")
-        self.image = self.image_r
-
     def update(self, commands, gravity):
         self.gravity = gravity
         
@@ -59,15 +56,13 @@ class Player(pygame.sprite.Sprite):
             #with holding down both left and right keys
             if K_RIGHT in commands or K_d in commands:
                 self.dx += self.walkSpeed
-                self.image = self.image_r
             if K_LEFT in commands or K_a in commands:
                 self.dx -= self.walkSpeed
-                self.image = self.image_l
             if K_UP in commands or K_w in commands:
                 self.dy -= self.walkSpeed
             if K_DOWN in commands or K_s in commands:
                 self.dy += self.walkSpeed
-        
+
         self.x += self.dx
         self.y += self.dy
        

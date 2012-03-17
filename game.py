@@ -1,6 +1,7 @@
 import pygame, sys, os
 from pygame.locals import *
 from loadLevel import loadLevel
+from Flamethrower import Flamethrower
 
 def quit():
     pygame.quit()
@@ -36,6 +37,11 @@ gravity = False
 
 #Read in a file to generate the sprites on a level
 player, pigs, blocks = loadLevel("one.txt", level)
+flamethrower = Flamethrower(level, player.x, player.y)
+
+#Debugging string - set this and it appears onscreen!
+db_str = ""
+
 #game loop
 while True:
     time_passed = clock.tick(FPS)
@@ -54,9 +60,12 @@ while True:
         elif event.type == KEYUP:
             if event.key in commands:
                 commands.remove(event.key)
+        elif event.type == MOUSEMOTION:
+            flamethrower.rotateTo((player.x-offset, player.y), event.pos)
 
     #Update
     player.update(commands, gravity)
+    flamethrower.update(player.x, player.y)
     for pig in pigs:
         pig.update(gravity)
 
@@ -84,14 +93,16 @@ while True:
 
     #Moving sprites
     player.draw()
+    flamethrower.draw()
     for pig in pigs:
         pig.draw()
 
+    #Set offset
     if player.x - offset < 50 and offset != 0:
         offset -= 10
     if player.x - offset > WIDTH-50 and offset != LEVEL_WIDTH:
         offset += 10
 
     screen.blit(level, (-offset, 0))
-    #screen.blit(font.render(str(offset) + " " + str(player.x), 1, (255, 255, 255)), (10,10))
+    screen.blit(font.render(db_str, 1, (0, 0, 0)), (10,10))
     pygame.display.flip() 
