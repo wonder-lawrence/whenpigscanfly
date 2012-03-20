@@ -25,7 +25,8 @@ class Flame(pygame.sprite.Sprite):
         self.speed = 10
 
         self.rect = pygame.Rect((self.x, self.y), self.image_dims)
-
+        
+        self.blockImmune = True
         self.active = True
 
     def update(self):
@@ -34,8 +35,9 @@ class Flame(pygame.sprite.Sprite):
         self.rect = pygame.Rect((self.x, self.y), self.image_dims)
         self.active = self.rect.colliderect(self.screen.get_rect())
 
-    def kill(self):
-        self.active = False
+    def kill(self, byBlock=False):
+        if not (byBlock and self.blockImmune):
+            self.active = False
 
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))

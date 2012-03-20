@@ -20,7 +20,6 @@ class Player(pygame.sprite.Sprite):
         self.image = self.load_image("pyro.png")
         self.x = x
         self.y = y
-        self.theta = -30
 
         self.dx = 0
         self.dy = 0
@@ -35,13 +34,15 @@ class Player(pygame.sprite.Sprite):
         #Speeds
         self.jumpSpeed = -20
         self.walkSpeed = 10
-
+        self.floatSpeed = 1 #x movement while jumping
         #Prevent double jumps from holding key down for more than one frame
         self.jumped = False
+        self.reversed = False
 
         #Boundaries
         self.maxx = self.screen.get_width() - self.image_w
         self.maxy = self.screen.get_height() - self.image_h
+        self.maxdx = 12
         #minimums assumed to be zero
 
         self.flamethrower = Flamethrower(self.screen, self.x, self.y)
@@ -50,20 +51,21 @@ class Player(pygame.sprite.Sprite):
         self.active = True
         
     def update(self, commands):
-        
-        #todo: collision detection for standing on platforms
-        #currently always in freefall
-        self.dx = 0
-        if self.y == self.maxy: #Todo: stop falling on blocks, not just botton of screen
+        if not self.jumped:
+            self.dx = 0
+            xspeed = self.walkSpeed
+        else:
+            xspeed = self.floatSpeed
+        if self.y == self.maxy or not self.jumped:
             self.dy = 0
             self.jumped = False
         else:
             self.dy += self.g
 
         if K_RIGHT in commands or K_d in commands:
-            self.dx += self.walkSpeed
+            self.dx += xspeed
         if K_LEFT in commands or K_a in commands:
-            self.dx -= self.walkSpeed
+            self.dx -= xspeed
         if K_UP in commands or K_w in commands:
             if not self.jumped:
                 self.dy += self.jumpSpeed
@@ -72,6 +74,8 @@ class Player(pygame.sprite.Sprite):
         #Unused 
         if K_DOWN in commands or K_s in commands:
             pass
+        
+        self.dx = bound(-self.maxdx, self.dx, self.maxdx)
 
         self.x += self.dx
         self.y += self.dy
@@ -81,11 +85,31 @@ class Player(pygame.sprite.Sprite):
         self.y = bound(0, self.y, self.maxy)
 
         self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
-
+        self.reversed = False
         self.flamethrower.update(self.x, self.y)
 
     def kill(self):
         pass
+
+    def land(self, block):
+        self.y = block.rect.top- self.image_h
+        self.dy = self.dx = 0
+        self.jumped = False
+        self.reversed = True
+
+    def reverse(self):
+        if not self.reversed:
+            self.dx *= -1
+            self.dy *= -1
+            self.x += self.dx
+            self.y += self.dy
+            self.flamethrower.update(self.x, self.y)
+            self.reversed = True
+
+    def fall(self):
+        if self.x > self.maxx:
+            self.jumped = False
+            update(self)
 
     def shoot(self):
         return self.flamethrower.shoot()

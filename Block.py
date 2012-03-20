@@ -24,5 +24,5 @@ class Block(pygame.sprite.Sprite):
         pass
 
     def draw(self):
-        self.screen.blit(self.image, (self.x, self.y))
+        self.screen.blit(self.image, self.rect.topleft)
 

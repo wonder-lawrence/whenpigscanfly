@@ -6,6 +6,12 @@ def quit():
     pygame.quit()
     sys.exit()
 
+def abs (x):
+    if x < 0:
+        return -1 * x
+    else:
+        return x
+
 pygame.init()
 
 #Screen
@@ -37,6 +43,7 @@ flames = []
 font = pygame.font.Font(None, 48)
 score_str = ""
 score = 0
+redHue = 255
 
 #game loop
 while True:
@@ -78,15 +85,47 @@ while True:
                 flame.kill()
                 score += 1
 
+    #Check block collions
+    collided = False
+    for block in blocks:
+        if pygame.sprite.collide_rect(player, block):
+            collided = True
+            if block.rect.top > player.y + player.image_h - abs(player.dy):
+                player.land(block)
+            else:
+                player.reverse()
+        for pig in pigs:
+            if pygame.sprite.collide_rect(pig, block):
+                pig.reverse()
+
+    if collided:
+        tmp_str = "Standing"
+    else:
+        tmp_str = "Falling"
+    if tmp_str != score_str:
+        score_str = tmp_str
+        redHue = 255
+
+    #Flame with blocks
+    for flame in flames:
+        collided = False
+        for block in blocks:
+            if pygame.sprite.collide_rect(flame, block):
+                collided = True
+        if collided:
+           flame.kill(True)
+        else:
+            flame.blockImmune = False
+
     #Remove inactive sprites
     pigs   = filter(lambda pig: pig.active, pigs)
     flames = filter(lambda flm: flm.active, flames)
    
-    score_str = str(score)
+  #  score_str = str(score)
 
     #Draw
     #Background
-    level.fill((200, 200, 200))
+    level.fill((205, 133, 63))
     pygame.draw.line(level, (0,0,255), (0,0), (LEVEL_WIDTH, HEIGHT))
 
     #Non-moving sprites (aka "blocks")
@@ -103,9 +142,11 @@ while True:
     #Set offset
     if player.x - offset < 50 and offset != 0:
         offset -= 10
-    if player.x - offset > WIDTH-50 and offset != LEVEL_WIDTH:
+    if player.x - offset > WIDTH-150 and offset + WIDTH < LEVEL_WIDTH:
         offset += 10
-
+    
     screen.blit(level, (-offset, 0))
-    screen.blit(font.render(score_str, True, (0, 0, 0)), (10,10))
+    screen.blit(font.render(score_str, True, (redHue, 0, 0)), (10,10))
+    redHue *= 145
+    redHue //= 150
     pygame.display.flip() 

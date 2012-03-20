@@ -22,8 +22,6 @@ def loadLevel(level_name, screen):
 
     col = row = 0
     GRANULARITY = 20
-    WIDTH = 800/GRANULARITY
-    HEIGHT = 600/GRANULARITY
 
     spriteMap = open(level_name)
     region = spriteMap.read(1)
@@ -34,14 +32,13 @@ def loadLevel(level_name, screen):
             pass
         elif region == "\n":
             row += 1
-            col  = 0
+            col  = -1
         elif region == "P":
             pigs.append(Pig(screen, x, y))
         elif region == "T":
             player = Player(screen, x, y)
-       # Uncomment and fill in when we have block sprites
-       # elif region == "#":
-       #     blocks.append(Block(screen, pygame.Rect(x, y, IMAGE_WIDTH, IMAGE_HEIGHT), IMAGE_FILENAME)) 
+        elif region == "#":
+            blocks.append(Block(screen, pygame.Rect(x, y, 60, 60), "wood.jpg")) 
         else:
             print "Unrecognized character: " + region
 

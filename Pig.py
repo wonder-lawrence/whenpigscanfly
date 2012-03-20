@@ -41,7 +41,14 @@ class Pig(pygame.sprite.Sprite):
     def kill(self):
         self.active = False
 
+    def reverse(self):
+        self.dx *= -1
+        self.dy *= -1
+
     def draw(self):
-        #Dummy draw method
         if self.active:
             pygame.draw.ellipse(self.screen, (255, 192, 203), self.rect)
+            ellipsex =- 20
+            if self.dx < 0:
+                ellipsex = self.image_w -50
+            pygame.draw.ellipse(self.screen, (216, 216, 216), pygame.Rect(self.x+ ellipsex, self.y, 70, 20))
