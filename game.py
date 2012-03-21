@@ -20,7 +20,7 @@ LEVEL_WIDTH = 2000
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('When Pigs Fly')
 screen = pygame.display.get_surface() 
-level = pygame.Surface((LEVEL_WIDTH, HEIGHT))
+level = pygame.Surface((LEVEL_WIDTH, HEIGHT+1))
 
 #Offset between model (level) and view (screen) 
 offset = 0
@@ -85,23 +85,24 @@ while True:
                 flame.kill()
                 score += 1
 
-    #Check block collions
-    collided = False
+    #Check block collisions
     for block in blocks:
         if pygame.sprite.collide_rect(player, block):
-            collided = True
-            if block.rect.top > player.y + player.image_h - abs(player.dy):
-                player.land(block)
+            tmp_str = str(player.y + player.image_h) +" "+str(block.rect.top)
+            if player.y + player.image_h < block.rect.top +2 <= player.y + player.image_h + 10:
+                player.collideTop(block)
+                tmp_str += "  Top     "
+            elif block.rect.bottom < player.y + abs(player.dy):
+                player.collideBottom()
+                tmp_str += "  Bottom  "
             else:
-                player.reverse()
+                player.collideSide(block)
+                tmp_str += "  Side    "
+
         for pig in pigs:
             if pygame.sprite.collide_rect(pig, block):
                 pig.reverse()
 
-    if collided:
-        tmp_str = "Standing"
-    else:
-        tmp_str = "Falling"
     if tmp_str != score_str:
         score_str = tmp_str
         redHue = 255
@@ -126,7 +127,6 @@ while True:
     #Draw
     #Background
     level.fill((205, 133, 63))
-    pygame.draw.line(level, (0,0,255), (0,0), (LEVEL_WIDTH, HEIGHT))
 
     #Non-moving sprites (aka "blocks")
     for block in blocks:
