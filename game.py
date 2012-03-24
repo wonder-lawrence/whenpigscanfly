@@ -37,13 +37,14 @@ commands = []
 
 #Read in a file to generate the sprites on a level
 player, pigs, blocks = loadLevel("one.txt", level)
+MAXPIGS = len(pigs)
 flames = []
 
 #Score and score display
 font = pygame.font.Font(None, 48)
-score_str = ""
 score = 0
-redHue = 255
+score_str = "Pigs killed: " + str(score)
+redHue = 0 #start black
 
 #game loop
 while True:
@@ -84,28 +85,27 @@ while True:
                 pig.kill()
                 flame.kill()
                 score += 1
+                score_str = "Pigs killed: " + str(score)
+                if score == MAXPIGS:
+                    score_str = "YOU WIN!"
+                redHue = 255
+
 
     #Check block collisions
     for block in blocks:
         if pygame.sprite.collide_rect(player, block):
             tmp_str = str(player.y + player.image_h) +" "+str(block.rect.top)
-            if player.y + player.image_h < block.rect.top +2 <= player.y + player.image_h + 10:
+            if player.y + player.image_h -10 < block.rect.top <= (
+                    player.y + player.image_h + player.maxdy):
                 player.collideTop(block)
-                tmp_str += "  Top     "
             elif block.rect.bottom < player.y + abs(player.dy):
                 player.collideBottom()
-                tmp_str += "  Bottom  "
             else:
                 player.collideSide(block)
-                tmp_str += "  Side    "
 
         for pig in pigs:
             if pygame.sprite.collide_rect(pig, block):
                 pig.reverse()
-
-    if tmp_str != score_str:
-        score_str = tmp_str
-        redHue = 255
 
     #Flame with blocks
     for flame in flames:
@@ -121,8 +121,6 @@ while True:
     #Remove inactive sprites
     pigs   = filter(lambda pig: pig.active, pigs)
     flames = filter(lambda flm: flm.active, flames)
-   
-  #  score_str = str(score)
 
     #Draw
     #Background

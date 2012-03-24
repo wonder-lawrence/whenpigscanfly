@@ -49,6 +49,7 @@ class Player(pygame.sprite.Sprite):
         self.maxx = self.screen.get_width() - self.image_w
         self.maxy = self.screen.get_height() - self.image_h
         self.maxdx = 12
+        self.maxdy = 15
         #minimums assumed to be zero
 
         self.flamethrower = Flamethrower(self.screen, self.x, self.y)
@@ -86,6 +87,7 @@ class Player(pygame.sprite.Sprite):
             pass
         
         self.dx = bound(-self.maxdx, self.dx, self.maxdx)
+        self.dy = bound(self.jumpSpeed, self.dy, self.maxdy)
 
         self.x += self.dx
         self.y += self.dy
