@@ -127,6 +127,7 @@ class Player(pygame.sprite.Sprite):
                 self.dx = -speed
                 self.x = block.rect.left - self.image_w - 1
             self.bounced = True
+            self.flamethrower.update(self.x, self.y)
 
     def collideBottom(self):
         if self.falling and not self.bounced:

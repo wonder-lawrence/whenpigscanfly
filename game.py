@@ -20,7 +20,7 @@ LEVEL_WIDTH = 2000
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('When Pigs Fly')
 screen = pygame.display.get_surface() 
-level = pygame.Surface((LEVEL_WIDTH, HEIGHT+1))
+level = pygame.Surface((LEVEL_WIDTH, HEIGHT))
 
 #Offset between model (level) and view (screen) 
 offset = 0
