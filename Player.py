@@ -24,15 +24,16 @@ class Player(pygame.sprite.Sprite):
     def __init__ (self, screen, x, y):
         self.screen = screen
         self.image = self.load_image("pyro.png")
+
         self.x = x
         self.y = y
-
         self.dx = 0
         self.dy = 0
 
         self.image_w = 50
         self.image_h = 93
         self.image = pygame.transform.smoothscale(self.image, (self.image_w, self.image_h))
+        self.updateRects()
 
         #Gravitational acceleration
         self.g = 1
@@ -56,20 +57,20 @@ class Player(pygame.sprite.Sprite):
 
         #Currently unused
         self.active = True
-        
+
+    def updateRects(self):
+        self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
+        self.standRect = pygame.Rect(self.x, self.y+1, self.image_w, self.image_h)
+
     def update(self, commands):
         if self.y == self.maxy:
             self.falling = False
-
-      #  if self.dy == 1:
-       #     self.falling = True
 
         if self.falling:
             self.dy += self.g
             xspeed = self.floatSpeed
         else:
-            self.dx = 0
-            self.dy = 1
+            self.dx = self.dy = 0
             xspeed = self.walkSpeed
 
         if K_RIGHT in commands or K_d in commands:
@@ -80,7 +81,6 @@ class Player(pygame.sprite.Sprite):
             if not self.falling:
                 self.dy += self.jumpSpeed
                 self.falling = True
-                self.y -= 1
                
         #Unused 
         if K_DOWN in commands or K_s in commands:
@@ -96,23 +96,25 @@ class Player(pygame.sprite.Sprite):
         self.x = bound(0, self.x, self.maxx)
         self.y = bound(0, self.y, self.maxy)
 
-        self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
+        self.updateRects()
         self.bounced = False
         self.flamethrower.update(self.x, self.y)
 
     def kill(self):
         pass
 
+    def fall(self):
+        self.falling = True
+        if self.dx == self.walkSpeed or -self.dx == self.walkSpeed:
+            self.dx //= 10
+
     def collideTop(self, block):
-        if not self.bounced:
-            if self.falling:
-                self.dx = 0
-                self.dy = 0
-                self.y = block.rect.top - self.image_h
-                self.falling = False
-            else:
-                self.y -= 1
+        if not self.bounced and self.falling:
+            self.dx = self.dy = 0
+            self.y = block.rect.top - self.image_h
+            self.falling = False
             self.bounced = True
+            self.updateRects()
 
     def collideSide(self, block):
         if not self.bounced:
@@ -127,6 +129,7 @@ class Player(pygame.sprite.Sprite):
                 self.dx = -speed
                 self.x = block.rect.left - self.image_w - 1
             self.bounced = True
+            self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
             self.flamethrower.update(self.x, self.y)
 
     def collideBottom(self):
@@ -134,6 +137,7 @@ class Player(pygame.sprite.Sprite):
             self.dy *= -1
         else:
             pass
+        self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
         self.bounced = True
 
     def shoot(self):

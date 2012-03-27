@@ -92,9 +92,9 @@ while True:
 
 
     #Check block collisions
+    shouldFall = True
     for block in blocks:
         if pygame.sprite.collide_rect(player, block):
-            tmp_str = str(player.y + player.image_h) +" "+str(block.rect.top)
             if player.y + player.image_h -10 < block.rect.top <= (
                     player.y + player.image_h + player.maxdy):
                 player.collideTop(block)
@@ -103,9 +103,15 @@ while True:
             else:
                 player.collideSide(block)
 
+        if block.rect.colliderect(player.standRect):
+            shouldFall = False
+
         for pig in pigs:
             if pygame.sprite.collide_rect(pig, block):
                 pig.reverse()
+
+    if shouldFall:
+        player.fall()
 
     #Flame with blocks
     for flame in flames:
