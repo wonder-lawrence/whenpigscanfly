@@ -44,7 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.floatSpeed = 1 #x movement while jumping
         #Prevent double jumps from holding key down for more than one frame
         self.falling = False
-        self.bounced = False
+        self.collided = False
+        self.supported = False
 
         #Boundaries
         self.maxx = self.screen.get_width() - self.image_w
@@ -54,6 +55,8 @@ class Player(pygame.sprite.Sprite):
         #minimums assumed to be zero
 
         self.flamethrower = Flamethrower(self.screen, self.x, self.y)
+
+        self.debug = False
 
         #Currently unused
         self.active = True
@@ -97,29 +100,56 @@ class Player(pygame.sprite.Sprite):
         self.y = bound(0, self.y, self.maxy)
 
         self.updateRects()
-        self.bounced = False
+        self.collided = False
+        self.supported = False
         self.flamethrower.update(self.x, self.y)
 
     def kill(self):
         pass
 
-    def fall(self):
-        self.falling = True
-        if self.dx == self.walkSpeed or -self.dx == self.walkSpeed:
-            self.dx //= 10
+    def collideWith(self, block):
+        fudgeFactor = 60
+        bottom = self.y + self.image_h + self.dy
+        if self.debug:
+            self.bottom = bottom
+        if pygame.sprite.collide_rect(self, block):
+            if self.dy == 0:
+                self.collideSide(block)
+                if self.debug:
+                    print "Side 1"
+            elif bottom - fudgeFactor < block.rect.top < bottom + fudgeFactor:
+                self.collideTop(block)
+                if self.debug:
+                    print "Top"
+            elif self.y - self.dy - fudgeFactor < block.rect.bottom:
+                self.collideBottom(block)
+                if self.debug:
+                    print "Bottom"
+            else:
+                self.collideSide(block)
+                if self.debug:
+                    print "Side 2"
+        elif self.y + self.image_h + 1 == block.rect.top:
+            self.supported = True
+
+    def doneWithCollides(self):
+        if not self.supported:
+            self.falling = True
 
     def collideTop(self, block):
-        if not self.bounced and self.falling:
+        if not self.collided and self.falling:
             self.dx = self.dy = 0
             self.y = block.rect.top - self.image_h
             self.falling = False
-            self.bounced = True
+            self.collided = True
             self.updateRects()
+            self.flamethrower.update(self.x, self.y)
+        self.supported = True
 
     def collideSide(self, block):
-        if not self.bounced:
+        if not self.collided:
             if self.falling:
-                speed = self.floatSpeed
+                speed = self.dx
             else:
                 speed = 0
             if self.dx < 0:
@@ -128,17 +158,17 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.dx = -speed
                 self.x = block.rect.left - self.image_w - 1
-            self.bounced = True
-            self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
+            self.collided = True
+            self.updateRects()
             self.flamethrower.update(self.x, self.y)
 
-    def collideBottom(self):
-        if self.falling and not self.bounced:
+    def collideBottom(self, block):
+        if self.falling and not self.collided:
             self.dy *= -1
-        else:
-            pass
-        self.rect = pygame.Rect(self.x, self.y, self.image_w, self.image_h)
-        self.bounced = True
+            self.y = block.rect.bottom
+            self.updateRects()
+            self.collided = True
+            self.flamethrower.update(self.x, self.y)
 
     def shoot(self):
         return self.flamethrower.shoot()
@@ -149,3 +179,12 @@ class Player(pygame.sprite.Sprite):
     def draw(self):
         self.screen.blit(self.image, (self.x, self.y))
         self.flamethrower.draw()
+
+        if self.debug:
+            fudgeFactor = 60
+            top =  self.y - self.dy - fudgeFactor 
+            bot1 = self.bottom - fudgeFactor
+            bot2 = self.bottom + fudgeFactor
+            pygame.draw.line(self.screen, (255, 0, 0), (0, top), (900, top))
+            pygame.draw.line(self.screen, (0, 0, 255), (0, bot1), (900, bot1))
+            pygame.draw.line(self.screen, (0, 255, 0), (0, bot2), (900, bot2))
