@@ -96,8 +96,15 @@ class Player(pygame.sprite.Sprite):
         self.y += self.dy
        
         #Don't go off edge of screen
-        self.x = bound(0, self.x, self.maxx)
-        self.y = bound(0, self.y, self.maxy)
+        boundx = bound(0, self.x, self.maxx)
+        if boundx != self.x:
+            self.x = boundx
+            self.dx = 0
+
+        boundy = bound(0, self.y, self.maxy)
+        if boundy != self.y:
+            self.y = boundy
+            self.dy = 0
 
         self.updateRects()
         self.collided = False
