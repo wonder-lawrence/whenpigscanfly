@@ -115,7 +115,7 @@ class Player(pygame.sprite.Sprite):
         pass
 
     def collideWith(self, block):
-        fudgeFactor = 60
+        fudgeFactor = 55
         bottom = self.y + self.image_h + self.dy
         if self.debug:
             self.bottom = bottom
@@ -154,20 +154,19 @@ class Player(pygame.sprite.Sprite):
         self.supported = True
 
     def collideSide(self, block):
-        if not self.collided:
-            if self.falling:
+        if not self.collided and self.falling:
                 speed = self.dx
-            else:
-                speed = 0
-            if self.dx < 0:
-                self.dx = speed
-                self.x = block.rect.right
-            else:
-                self.dx = -speed
-                self.x = block.rect.left - self.image_w - 1
-            self.collided = True
-            self.updateRects()
-            self.flamethrower.update(self.x, self.y)
+        else:
+            speed = 0
+        if self.dx < 0:
+            self.dx = speed
+            self.x = block.rect.right
+        else:
+            self.dx = -speed
+            self.x = block.rect.left - self.image_w - 1
+        self.collided = True
+        self.updateRects()
+        self.flamethrower.update(self.x, self.y)
 
     def collideBottom(self, block):
         if self.falling and not self.collided:
@@ -188,7 +187,7 @@ class Player(pygame.sprite.Sprite):
         self.flamethrower.draw()
 
         if self.debug:
-            fudgeFactor = 60
+            fudgeFactor = 55
             top =  self.y - self.dy - fudgeFactor 
             bot1 = self.bottom - fudgeFactor
             bot2 = self.bottom + fudgeFactor
