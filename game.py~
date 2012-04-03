@@ -12,9 +12,6 @@ def abs (x):
     else:
         return x
 
-def lose():
-    pass
-
 pygame.init()
 
 #Screen
