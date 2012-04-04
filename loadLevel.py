@@ -38,7 +38,7 @@ def loadLevel(level_name, screen):
         elif region == "T":
             player = Player(screen, x, y)
         elif region == "#":
-            blocks.append(Block(screen, pygame.Rect(x, y, 60, 60), "wood.jpg")) 
+            blocks.append(Block(screen, pygame.Rect(x, y, 60, 60), "filecab.png")) 
         else:
             print "Unrecognized character: " + region
 

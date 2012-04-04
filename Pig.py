@@ -14,6 +14,7 @@ class Pig(pygame.sprite.Sprite):
     def __init__ (self, screen, x, y):
         self.screen = screen
         self.image = self.load_image("fpig.png")
+        self.image = self.image.convert_alpha()
         self.x = x
         self.y = y
         self.active = True
