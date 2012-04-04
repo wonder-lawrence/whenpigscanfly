@@ -2,6 +2,16 @@ import pygame, sys, os
 from pygame.locals import *
 from loadLevel import loadLevel
 
+
+def load_image(image_name):
+        ''' The proper way to load an image '''
+        try:
+                image = pygame.image.load(image_name)
+        except pygame.error, message:
+                print "Cannot load image: " + image_name
+                raise SystemExit, message
+        return image.convert_alpha()
+
 def quit():
     pygame.quit()
     sys.exit()
@@ -12,8 +22,18 @@ def abs (x):
     else:
         return x
 
-def lose():
-    pass
+def win():
+    intro = load_image("Win_screen.png")
+    #screen.blit(intro, (0, 0))
+    level.fill((255, 255, 255))
+    screen.blit(intro, (0, 0))
+    pygame.display.flip()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            quit()
+	elif event.type == KEYDOWN:
+		if event.key == K_ESCAPE:
+			quit()
 
 pygame.init()
 
@@ -54,9 +74,14 @@ plives_str = "Player Lives: " + str(plives)
 score_str = "Pigs killed: " + str(score)
 redHue = 0 #start black
 
+screen_id = 0
+
 #game loop
 while True:
     time_passed = clock.tick(FPS)
+
+    while screen_id == 1:
+	    win()
 
     #Handle events
     for event in pygame.event.get():
@@ -98,6 +123,7 @@ while True:
                 score_str = "Pigs killed: " + str(score)
                 if score == MAXPIGS:
                     score_str = "YOU WIN!"
+                    screen_id = 1
                 redHue = 255
 
 
