@@ -2,17 +2,24 @@ import pygame, sys, os, random
 from pygame.locals import *
 
 class Pig(pygame.sprite.Sprite):
+
+    def load_image(self, image_name):
+        try:
+            image = pygame.image.load(image_name)
+        except pygame.error, message:
+           print "Cannot load image: " + image_name
+           raise SystemExit, message
+        return image.convert_alpha()
+    
     def __init__ (self, screen, x, y):
         self.screen = screen
+        self.image = self.load_image("fpig.png")
         self.x = x
         self.y = y
-
-        #Width and height (curently of ellipse, later of sprite image)
-        self.image_w = 100
-        self.image_h = 40
-
         self.active = True
 
+        self.image_w = 30
+        self.image_h = 30
         #Speed
         self.flyingSpeed = 6
         self.walkingSpeed = 5
@@ -47,8 +54,4 @@ class Pig(pygame.sprite.Sprite):
 
     def draw(self):
         if self.active:
-            pygame.draw.ellipse(self.screen, (255, 192, 203), self.rect)
-            ellipsex =- 20
-            if self.dx < 0:
-                ellipsex = self.image_w -50
-            pygame.draw.ellipse(self.screen, (216, 216, 216), pygame.Rect(self.x+ ellipsex, self.y, 70, 20))
+            self.screen.blit(self.image, (self.x, self.y))

@@ -34,6 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.image_h = 93
         self.image = pygame.transform.smoothscale(self.image, (self.image_w, self.image_h))
         self.updateRects()
+        self.active = True
 
         #Gravitational acceleration
         self.g = 1
@@ -112,7 +113,7 @@ class Player(pygame.sprite.Sprite):
         self.flamethrower.update(self.x, self.y)
 
     def kill(self):
-        pass
+        self.active = False
 
     def collideWith(self, block):
         fudgeFactor = 55

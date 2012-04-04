@@ -87,7 +87,7 @@ while True:
     #Check pig collisions
     for pig in pigs:
         if pygame.sprite.collide_rect(player, pig):
-            plives -=1
+            plives -= 1
             if plives == 0:
                 player.kill()
         for flame in flames:
