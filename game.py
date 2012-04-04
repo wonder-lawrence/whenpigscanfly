@@ -53,31 +53,33 @@ pygame.init()
 pygame.mixer.music.load("igm.mp3")
 pygame.mixer.music.play(-1)
 
-#Screen
+#Screen                                                                                                                                                                                                                                   
 WIDTH, HEIGHT = 800, 600
 LEVEL_WIDTH = 5000
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('When Pigs Fly')
-screen = pygame.display.get_surface() 
+screen = pygame.display.get_surface()
 level = pygame.Surface((LEVEL_WIDTH, HEIGHT))
 
-#Offset between model (level) and view (screen) 
+#Offset between model (level) and view (screen)                                                                                                                                                                                           
 offset = 0
 
-#Clock
-clock = pygame.time.Clock()
-FPS = 50
-time_passed = 0
+#Clock                                                                                                                                                                                                          
+clock = pygame.time.Clock()                                                                                                                                                                                                       
+FPS = 50                                                                                                                                                                                                                          
+time_passed = 0                                                                                                                                                                                                                   
 
-#Static list of controls
+#Static list of controls                                                                                                                                                                                                                  
 controls = [K_UP, K_DOWN, K_LEFT, K_RIGHT, K_w, K_a, K_s, K_d]
-#Dynamic list of active commands. Subset of controls.
+
+#Dynamic list of active commands. Subset of controls.                                                                                                                                                                                     
 commands = []
 
-#Read in a file to generate the sprites on a level
+#Read in a file to generate the sprites on a level                                                                                                                                                                                        
 player, pigs, blocks = loadLevel("one.txt", level)
 MAXPIGS = len(pigs)
 flames = []
+
 
 #Score and score display
 font = pygame.font.Font(None, 48)
@@ -86,7 +88,6 @@ score = 0
 plives_str = "Player Lives: " + str(plives)
 score_str = "Pigs killed: " + str(score)
 redHue = 0 #start black
-
 screen_id = 0
 
 #game loop
