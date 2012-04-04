@@ -22,6 +22,19 @@ def abs (x):
     else:
         return x
 
+def lose():
+    intro = load_image("Pigs_win_screen.png")
+    #screen.blit(intro, (0, 0))
+    level.fill((255, 255, 255))
+    screen.blit(intro, (0, 0))
+    pygame.display.flip()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            quit()
+        elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                        quit()
+
 def win():
     intro = load_image("Win_screen.png")
     #screen.blit(intro, (0, 0))
@@ -80,8 +93,14 @@ screen_id = 0
 while True:
     time_passed = clock.tick(FPS)
 
+    if len(pigs) == 0:
+        screen_id = 1
+
     while screen_id == 1:
 	    win()
+
+    while screen_id == 2:
+	    lose()
 
     #Handle events
     for event in pygame.event.get():
@@ -112,9 +131,10 @@ while True:
     #Check pig collisions
     for pig in pigs:
         if pygame.sprite.collide_rect(player, pig):
+	    pig.kill()
             plives -= 1
             if plives == 0:
-                player.kill()
+		    screen_id = 2
         for flame in flames:
             if pygame.sprite.collide_rect(flame, pig):
                 pig.kill()
@@ -153,7 +173,7 @@ while True:
 
     #Draw
     #Background
-    level.fill((205, 133, 63))
+    level.fill((128, 128, 128))
 
     #Non-moving sprites (aka "blocks")
     for block in blocks:
@@ -174,7 +194,7 @@ while True:
     
     screen.blit(level, (-offset, 0))
     screen.blit(font.render(score_str, True, (redHue, 0, 0)), (10,10))
-    screen.blit(font.render(plives_str, True, (0, 0, 0)), (10,40))
+    screen.blit(font.render("Lives: " + str(plives), True, (0, 0, 0)), (10,40))
     redHue *= 145
     redHue //= 150
     pygame.display.flip() 
