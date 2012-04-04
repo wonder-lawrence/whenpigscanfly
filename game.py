@@ -17,6 +17,9 @@ def lose():
 
 pygame.init()
 
+pygame.mixer.music.load("igm.mp3")
+pygame.mixer.music.play(-1)
+
 #Screen
 WIDTH, HEIGHT = 800, 600
 LEVEL_WIDTH = 5000
@@ -45,7 +48,9 @@ flames = []
 
 #Score and score display
 font = pygame.font.Font(None, 48)
+plives = 4
 score = 0
+plives_str = "Player Lives: " + str(plives)
 score_str = "Pigs killed: " + str(score)
 redHue = 0 #start black
 
@@ -82,7 +87,9 @@ while True:
     #Check pig collisions
     for pig in pigs:
         if pygame.sprite.collide_rect(player, pig):
-            player.kill()
+            plives -=1
+            if plives == 0:
+                player.kill()
         for flame in flames:
             if pygame.sprite.collide_rect(flame, pig):
                 pig.kill()
@@ -141,6 +148,7 @@ while True:
     
     screen.blit(level, (-offset, 0))
     screen.blit(font.render(score_str, True, (redHue, 0, 0)), (10,10))
+    screen.blit(font.render(plives_str, True, (0, 0, 0)), (10,40))
     redHue *= 145
     redHue //= 150
     pygame.display.flip() 

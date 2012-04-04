@@ -28,7 +28,7 @@ def loadLevel(level_name, screen):
     while region != "":
         x, y = col*GRANULARITY, row*GRANULARITY
 
-        if region == " ":
+        if (region == " " or region == "\t"):
             pass
         elif region == "\n":
             row += 1
