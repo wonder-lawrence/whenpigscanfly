@@ -13,12 +13,14 @@ class Pig(pygame.sprite.Sprite):
     
     def __init__ (self, screen, x, y):
         self.screen = screen
-        self.image = self.load_image("flying_pig1.png")
-        self.image = self.image.convert_alpha()
+        self.normal_img = self.load_image("flying_pig1m.png")
+        self.mirror_img = self.load_image("flying_pig1.png")
+        self.image = self.normal_img
         self.x = x
         self.y = y
         self.active = True
-
+        self.left = True
+        
         self.image_w = 30
         self.image_h = 30
         #Speed
@@ -50,6 +52,12 @@ class Pig(pygame.sprite.Sprite):
         self.active = False
 
     def reverse(self):
+        if self.left:
+            self.image = self.mirror_img
+            self.left = False
+        elif self.left == False:
+            self.image = self.normal_img
+            self.left = True
         self.dx *= -1
         self.dy *= -1
 
